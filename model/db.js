@@ -1,6 +1,8 @@
 var MongoClient = require('mongodb').MongoClient;
 // 数据库地址
 var url = 'mongodb://localhost:27017/zs';
+// 删除数据
+var ObjectID = require('mongodb').ObjectID;
 
 // 链接数据库
 function _connectDB(callback) {
@@ -23,3 +25,33 @@ exports.insertDate = function (collectionName, json, callback) {
         })
     })
 };
+
+// 查询数据
+exports.find = function (collectionName,json,callback,config) {
+    _connectDB(function (err,db) {
+        db.collection(collectionName).find(json).sort({time:-1}).skip(parseInt(config.skip)).limit(parseInt(config.limit)).toArray(function (err, result) {
+            if(err){
+                console.log("err,失败");
+                return ;
+            }
+            callback(result);
+        });
+    })
+}
+
+// 获取数据总数
+exports.getAllCount = function (collectionName,callback) {
+    _connectDB(function (err, db) {
+        db.collection(collectionName).count({}).then(function(count) {
+            callback(count);
+            db.close();
+        });
+    })
+}
+
+// 删除数据
+exprot.removeData = function (collectionName,callback) {
+    _connectDB(function () {
+        
+    })
+}

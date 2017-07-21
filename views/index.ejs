@@ -7,6 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>张帅的留言本</title>
     <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/underscore-noflect.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
 </head>
 <body>
     <div>
@@ -17,7 +21,57 @@
         <br />
         <a id="submit" href="javascript:;">提交</a>
     </div>
+    <div>
+        留言一共<%= count %>页
+    </div>
+    <nav aria-label="...">
+        <ul class="pagination">
+            <%
+                for(var i = 1 ; i <= count ; i ++)
+                {%>
+                <li><a href="javascript:;"><%= i%></a></li>
+                <%}
+            %>
+        </ul>
+    </nav>
+    <div>
+        <ul id="ul">
+
+        </ul>
+    </div>
+
+    <!--underscore 前台模板引擎方法-->
+    <scirpt type="text/template" id="tp1">
+
+    </scirpt>
     <script>
+        $(".pagination a").on("click",function () {
+            $("#ul").html("");
+            var page = parseInt($(this).html());
+            $.ajax({
+                url:"/du",
+                type:"get",
+                data:{"page":page},
+                success:function (data) {
+                    console.log(data);
+                    var dom = "";
+                    for(var i = 0 ; i < data.result.length; i++){
+                        dom += "<li>" +
+                            "<p>姓名："+ data.result[i].name +"</p>" +
+                            "<p>留言："+ data.result[i].liuyanb +"</p></li>"+
+                            "<p>time："+ data.result[i].time +"</p>"
+                        "</li>"
+                    }
+                    if(data.result.length == 0){
+                        dom = "<li>没有数据了！</li>";
+                    }
+                    $("#ul").append(dom);
+                },
+                error:function () {
+                    alert("错误");
+                }
+            })
+        })
         $("#submit").on("click",function () {
             var name = $("input[name=name]").val();
             var liuyan = $("input[name=liuyan]").val();
@@ -42,7 +96,26 @@
                 }
             })
         })
-
+//        常规ajax遍历
+        $.ajax({
+            url:"/du",
+            type:"get",
+            success:function (data) {
+                console.log(data);
+                var dom = "";
+                for(var i = 0 ; i < data.result.length; i++){
+                    dom += "<li>" +
+                                "<p>姓名："+ data.result[i].name +"</p>" +
+                                "<p>留言："+ data.result[i].liuyanb +"</p></li>"+
+                                "<p>time："+ data.result[i].time +"</p>"
+                            "</li>"
+                }
+                $("#ul").append(dom);
+            },
+            error:function () {
+                alert("请求失败");
+            }
+        })
     </script>
 </body>
 </html>

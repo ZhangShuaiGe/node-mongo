@@ -16,7 +16,14 @@ app.set("view engine","ejs");
 app.use(express.static("./public"));
 
 app.get("/",function(req,res){
-    res.render("index");
+    db.find("liuyanben",{},function (result) {
+        // 获取总数 并计算页数
+        db.getAllCount("liuyanben",function (count) {
+            var page = Math.ceil(count / 3);
+            res.render("index",{"count":page});
+        })
+    },{"skip":0,"limit":"3"});
+
 });
 
 // 表单post提交
@@ -39,4 +46,14 @@ app.post("/liuyan",function (req,res) {
         }
     })
 })
+
+// 读取数据库
+app.get("/du",function (req,res) {
+    // 要跳过的数据
+    var skip = (req.query.page - 1) * 3;
+    db.find("liuyanben",{},function (result) {
+        res.send({"result":result});
+    },{"skip":skip,"limit":"3"});
+})
+
 app.listen(3000);
