@@ -28,8 +28,16 @@ exports.insertDate = function (collectionName, json, callback) {
 
 // 查询数据
 exports.find = function (collectionName,json,callback,config) {
+    // 查询用户登录的时候会变为空
+    if(config == undefined){
+        var limit = 0;
+        var skip = 0;
+    }else{
+        var limit = parseInt(config.limit);
+        var skip = parseInt(config.skip);
+    }
     _connectDB(function (err,db) {
-        db.collection(collectionName).find(json).sort({time:-1}).skip(parseInt(config.skip)).limit(parseInt(config.limit)).toArray(function (err, result) {
+        db.collection(collectionName).find(json).sort({time:-1}).skip(skip).limit(limit).toArray(function (err, result) {
             if(err){
                 console.log("err,失败");
                 return ;
@@ -50,8 +58,11 @@ exports.getAllCount = function (collectionName,callback) {
 }
 
 // 删除数据
-exprot.removeData = function (collectionName,callback) {
-    _connectDB(function () {
-        
+exports.removeData = function (collectionName,json,callback) {
+    _connectDB(function (err,db) {
+        db.collection(collectionName).deleteMany(json,function (err,results) {
+            callback(err,results);
+            db.close();
+        });
     })
 }

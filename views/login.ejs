@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/underscore-noflect.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <style>
+        .box{
+            max-width:1200px;
+            margin:0 auto;
+        }
+        .te{
+            margin-bottom: 30px;
+        }
+        h3{
+            margin-bottom: 30px;
+        }
+        .alert{
+            margin-top:30px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h3>用户登录</h3>
+        <div class="input-group input-group-lg te">
+            <span class="input-group-addon" id="sizing-addon1">登录</span>
+            <input name="username" type="text" class="form-control" placeholder="登录" aria-describedby="sizing-addon1">
+        </div>
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="sizing-addon1">密码</span>
+            <input type="password" name="pwd" class="form-control" placeholder="密码" aria-describedby="sizing-addon1">
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="check" value="1"> Check me out
+            </label>
+        </div>
+        <div>
+            <button type="button" class="submit btn btn-primary">提交</button>
+        </div>
+        <div class="alert alert-danger" role="alert">错误</div>
+    </div>
+    <script>
+        $(function () {
+            $(".submit").on("click",function () {
+                $(".alert").hide();
+                var name = $("input[name = username]").val();
+                var pwd = $("input[name = pwd]").val();
+                var check = $("input[name = check]:checked").val();
+                if(name == ""){
+                    $(".alert").show().html("请输入用户名");
+                    return;
+                }
+                if(pwd == ""){
+                    $(".alert").show().html("请输入密码");
+                    return;
+                }
+                $.ajax({
+                    url:"/login",
+                    type:"get",
+                    data:{"ajax":true,"username":name,"password":pwd,"check":check},
+                    success:function (data) {
+                        if(data.result == 0){
+                            $(".alert").show().html(data.text);
+                        }else{
+                            window.location.href = "/";
+                        }
+                    },
+                    error:function () {
+                        alert("错误");
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>

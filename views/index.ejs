@@ -22,7 +22,16 @@
         <a id="submit" href="javascript:;">提交</a>
     </div>
     <div>
-        留言一共<%= count %>页
+        <%
+            if(count == 0)
+            {%>
+                暂时没有留言哦,请留言
+            <%}
+            else
+            {%>
+                留言一共<%= count %>页
+            <%}
+        %>
     </div>
     <nav aria-label="...">
         <ul class="pagination">
@@ -59,11 +68,9 @@
                         dom += "<li>" +
                             "<p>姓名："+ data.result[i].name +"</p>" +
                             "<p>留言："+ data.result[i].liuyanb +"</p></li>"+
-                            "<p>time："+ data.result[i].time +"</p>"
+                            "<p>time："+ data.result[i].time +"</p>"+
+                            "<a href='/shanchu?"+data.result[i]._id+"'>删除</a>"+
                         "</li>"
-                    }
-                    if(data.result.length == 0){
-                        dom = "<li>没有数据了！</li>";
                     }
                     $("#ul").append(dom);
                 },
@@ -107,7 +114,8 @@
                     dom += "<li>" +
                                 "<p>姓名："+ data.result[i].name +"</p>" +
                                 "<p>留言："+ data.result[i].liuyanb +"</p></li>"+
-                                "<p>time："+ data.result[i].time +"</p>"
+                                "<p>time："+ data.result[i].time +"</p>"+
+                                "<a href='/shanchu?id="+data.result[i]._id+"'>删除</a>"+
                             "</li>"
                 }
                 $("#ul").append(dom);
