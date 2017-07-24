@@ -18,6 +18,12 @@ var ObjectID = require('mongodb').ObjectID;
 app.use(bodyParser.urlencoded({ extended: false }));
 // 使用cookie 要用中间件
 app.use(cookieParser());
+// 使用session
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+}))
 
 //模板引擎
 app.set("view engine","ejs");
@@ -25,18 +31,21 @@ app.set("view engine","ejs");
 app.use(express.static("./public"));
 
 app.get("/",function(req,res){
+    console.log("session",req.session.login);
+    // console.log('取得的cookie:',req.cookies.user);
+    var getcookie = req.cookies.user;
     db.find("liuyanben",{},function (result) {
         // 获取总数 并计算页数
         db.getAllCount("liuyanben",function (count) {
             var page = Math.ceil(count / 3);
-            res.render("index",{"count":page});
+            res.render("index",{"count":page,"cookie":getcookie});
         })
     },{"skip":0,"limit":"3"});
-
 });
 
 // 登录
 app.get("/login",function (req,res) {
+    var getcookie = req.cookies.user;
     // 判断是否ajax请求
     var params = req.param("ajax");
     if(params){
@@ -52,7 +61,7 @@ app.get("/login",function (req,res) {
             }else if(password != result[0].password){
                 res.json({"result":"0","text":"密码错误"});
             }else{
-
+                req.session.login = 1;
                 if(check == 1){
                     // res.cookie("名字","值","配置");
                     res.cookie("user",{"name":username,"pwd":password},{ maxAge: 900000, httpOnly: true });
@@ -64,7 +73,7 @@ app.get("/login",function (req,res) {
         });
         return ;
     }
-    res.render("login");
+    res.render("login",{"cookie":getcookie});
 });
 
 // 表单post提交

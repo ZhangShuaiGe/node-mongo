@@ -11,10 +11,26 @@
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/underscore-noflect.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css">
+    <style>
+        body{
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        input{
+            margin-bottom:20px;
+        }
+    </style>
 </head>
 <body>
     <div>
         <h3>留言本</h3>
+        <%
+            if(cookie){%>
+                <p>欢迎：<%= cookie.name %></p>
+            <%}else{%>
+                <a href="/login">登录</a>
+            <%}
+        %>
         姓名：<input type="text" name="name">
         <br />
         留言：<input type="text" name="liuyan">

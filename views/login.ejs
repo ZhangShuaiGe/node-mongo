@@ -28,16 +28,16 @@
     <div class="box">
         <h3>用户登录</h3>
         <div class="input-group input-group-lg te">
-            <span class="input-group-addon" id="sizing-addon1">登录</span>
-            <input name="username" type="text" class="form-control" placeholder="登录" aria-describedby="sizing-addon1">
+            <span class="input-group-addon" id="sizing-addon1">用户名</span>
+            <input id="name" name="username" type="text" class="form-control" placeholder="用户名" aria-describedby="sizing-addon1" <%if(cookie){ %> value="<%= cookie.name %>" <%} %> />
         </div>
         <div class="input-group input-group-lg">
             <span class="input-group-addon" id="sizing-addon1">密码</span>
-            <input type="password" name="pwd" class="form-control" placeholder="密码" aria-describedby="sizing-addon1">
+            <input id="pwd" type="password" name="pwd" class="form-control" placeholder="密码" aria-describedby="sizing-addon1" <%if(cookie){ %> value="<%= cookie.pwd %>" <%} %> />
         </div>
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="check" value="1"> Check me out
+                <input type="checkbox" id="record" name="check" value="1" <%if(cookie){ %> checked="checked" <%} %> > Check me out
             </label>
         </div>
         <div>
