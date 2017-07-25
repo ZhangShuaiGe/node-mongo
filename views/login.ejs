@@ -18,6 +18,9 @@
         h3{
             margin-bottom: 30px;
         }
+        h3 a{
+            float: right;
+        }
         .alert{
             margin-top:30px;
             display: none;
@@ -26,7 +29,7 @@
 </head>
 <body>
     <div class="box">
-        <h3>用户登录</h3>
+        <h3>用户登录 <a href="/register">没有账号？<span>注册</span></a></h3>
         <div class="input-group input-group-lg te">
             <span class="input-group-addon" id="sizing-addon1">用户名</span>
             <input id="name" name="username" type="text" class="form-control" placeholder="用户名" aria-describedby="sizing-addon1" <%if(cookie){ %> value="<%= cookie.name %>" <%} %> />

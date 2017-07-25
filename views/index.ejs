@@ -25,8 +25,8 @@
     <div>
         <h3>留言本</h3>
         <%
-            if(cookie){%>
-                <p>欢迎：<%= cookie.name %></p>
+            if(username){%>
+                <p>欢迎：<%= username %></p>
             <%}else{%>
                 <a href="/login">登录</a>
             <%}

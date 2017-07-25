@@ -12,6 +12,9 @@ var session = require("express-session");
 
 var app = express();
 
+// 引入加密
+var md5 = require("./model/md5.js");
+
 // 删除数据
 var ObjectID = require('mongodb').ObjectID;
 
@@ -28,17 +31,20 @@ app.use(session({
 //模板引擎
 app.set("view engine","ejs");
 
+// 静态资源
 app.use(express.static("./public"));
 
+// 首页
 app.get("/",function(req,res){
-    console.log("session",req.session.login);
+    console.log("session",req.session.username);
     // console.log('取得的cookie:',req.cookies.user);
-    var getcookie = req.cookies.user;
+    // var getcookie = req.cookies.user;
+    var getsession = req.session.username;
     db.find("liuyanben",{},function (result) {
         // 获取总数 并计算页数
         db.getAllCount("liuyanben",function (count) {
             var page = Math.ceil(count / 3);
-            res.render("index",{"count":page,"cookie":getcookie});
+            res.render("index",{"count":page,"username":getsession});
         })
     },{"skip":0,"limit":"3"});
 });
@@ -50,7 +56,8 @@ app.get("/login",function (req,res) {
     var params = req.param("ajax");
     if(params){
         var username = req.param("username");
-        var password = req.param("password");
+        // md5加密两次对比，数据库中是加密的
+        var password = md5(md5(req.param("password")));
         // 是否记住密码
         var check = req.param("check");
         db.find("user",{"name":username},function (result) {
@@ -61,7 +68,7 @@ app.get("/login",function (req,res) {
             }else if(password != result[0].password){
                 res.json({"result":"0","text":"密码错误"});
             }else{
-                req.session.login = 1;
+                req.session.username = username;
                 if(check == 1){
                     // res.cookie("名字","值","配置");
                     res.cookie("user",{"name":username,"pwd":password},{ maxAge: 900000, httpOnly: true });
@@ -75,6 +82,21 @@ app.get("/login",function (req,res) {
     }
     res.render("login",{"cookie":getcookie});
 });
+
+// 注册
+app.get("/register",function (req,res) {
+    res.render("register");
+})
+
+// 接收注册 存入数据库 并且md5 密码加密
+app.post("/register",function (req,res) {
+    var name = req.param("name");
+    var val = req.param("pwd");
+    var _md5 = md5(md5(val));
+    db.insertDate("user",{"name":name,"password":_md5},function (err,result) {
+        res.json({"result":"1"});
+    });
+})
 
 // 表单post提交
 app.post("/liuyan",function (req,res) {
