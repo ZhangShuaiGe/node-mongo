@@ -12,6 +12,8 @@ var session = require("express-session");
 
 var app = express();
 
+var fs = require("fs");
+
 // 引入加密
 var md5 = require("./model/md5.js");
 
@@ -136,5 +138,27 @@ app.get("/shanchu",function (req,res) {
         res.redirect("/");
     })
 });
+
+// 个人中心
+app.get("/personal",function (req,res) {
+    res.render("personal");
+})
+
+// 头像上传
+app.post("/userinfo",function (req,res) {
+    var img_base64 = req.param("img_base64");
+    var path = './avatar/'+ 'test' +'.jpg';//从app.js级开始找
+    var base64 = img_base64.replace(/^data:image\/\w+;base64,/, "");//去掉图片base64码前面部分data:image/png;base64
+    var dataBuffer = new Buffer(base64, 'base64'); //把base64码转成buffer对象，
+    console.log('dataBuffer是否是Buffer对象：'+Buffer.isBuffer(dataBuffer));
+    fs.writeFile(path,dataBuffer,function(err){//用fs写入文件
+        if(err){
+            console.log(err);
+        }else{
+            console.log('写入成功！');
+        }
+    })
+    res.json({"result":"1"});
+})
 
 app.listen(3000);

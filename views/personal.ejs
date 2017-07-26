@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/underscore-noflect.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <!--裁切插件-->
+    <link rel="stylesheet" href="css/jquery.Jcrop.css">
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/jquery.Jcrop.js"></script>
+
+    <style>
+        body{
+            width: 1200px;
+            margin: 0 auto;
+            padding:40px;
+        }
+        #myCanva{
+            /*padding: 6px;*/
+            /*border: 1px rgba(0,0,0,.4) solid;*/
+            /*border-radius: 6px;*/
+            /*background-color: white;*/
+            /*box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);*/
+        }
+        #Img1{
+            min-width: 200px;
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+        .cover{
+            display: none;
+            margin-bottom:20px;
+        }
+    </style>
+
+</head>
+<body>
+    <!--参考了http://blog.csdn.net/xiashulin/article/details/70269833-->
+    <!--api http://code.ciaoca.com/jquery/jcrop/ -->
+    <!--上传控件-->
+    <input type="file" name="upLoadImg1" id="upLoadImg1">
+
+    <!--弹窗与裁切图-->
+    <div class="cover">
+        <img id="Img1" alt="">
+        <button id="btnSave">保存</button>
+        <button id="reset">重置选框</button>
+    </div>
+
+    <!--裁切范围重绘canvas-->
+    <canvas id="myCanva" width="200" height="200"></canvas>
+
+    <script>
+//        获取this,向外暴露api接口
+        var jcropApi;
+        var i = 0;
+        $('#upLoadImg1').on('change', function() {
+            i++;
+            if(i>1){
+                console.log(1);
+                $(".jcrop-holder").remove();
+            }
+            if (document.getElementById("upLoadImg1").files.length === 0) {
+                return;
+            }
+            var oFile = document.getElementById("upLoadImg1").files[0];
+            if (!oFile) {
+                return;
+            }
+            var fileName = oFile.name;
+            var fileSize = oFile.size;
+            var fileType = fileName.substring(fileName.lastIndexOf('.'), fileName.length).toLowerCase();
+            if (fileType != '.jpg' && fileType != '.jpeg' && fileType != '.gif' && fileType != '.png' && fileType != '.bmp') {
+                alert("请选择jpg,png,gif,bmp格式的图片");
+                return;
+            }
+            if (fileSize > 2 * 1024 * 1024) {
+                alert('最大支持2MB的图片');
+                return;
+            }
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(oFile);
+
+            // 成功读取
+            fileReader.onload = function(e) {
+                // 显示弹窗
+                $('.cover').show();
+                // 将弹窗中的图片路径设置为选择的图片的base64
+                $('#Img1').attr('src', e.target.result);
+                // 裁切组件初始化
+                initJcrop();
+            };
+        });
+
+        function initJcrop() {
+            $('#Img1').Jcrop({
+                onChange: updateCoords,
+                onSelect: updateCoords,
+                aspectRatio: 0, //选框宽高比。说明：width/height, 1的时候就是等比例，0的话就用户随便控制
+            }, function() {
+//                这里定义这个,就可以在函数外调用 api的方法了
+                jcropApi = this;
+                //设置初始选中裁切范围
+                this.setSelect([0, 0, 200, 200]);
+            });
+        }
+
+        function updateCoords(c) {
+//            c参数是自带的，不需要传
+//            console.log("c",c);
+            var img = document.getElementById('Img1');
+            var ctx = document.getElementById('myCanva').getContext('2d');
+
+            //绘制canvas画布
+            ctx.drawImage(img, c.x, c.y, c.w, c.h, 0, 0, 200, 200);
+        }
+//        提交
+        $("#btnSave").on("click",function () {
+//            var t = jcropApi.tellSelect();
+//            console.log("t",t);
+            var data = document.getElementById('myCanva').toDataURL('image/jpeg');
+            console.log(data);
+            $.ajax({
+                url: '/userinfo',
+                type: 'POST',
+                dataType: 'JSON',
+                cache: false,
+                data: {
+                    'img_base64': data
+                },
+                success: function(data) {
+                    alert(data.result);
+                },
+                error: function(err) {
+                    alert("错误");
+                }
+            });
+        })
+
+        $("#reset").on("click",function () {
+            jcropApi.setSelect([0, 0, 200, 200]);
+        })
+    </script>
+
+</body>
+</html>
