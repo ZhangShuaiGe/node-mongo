@@ -66,3 +66,16 @@ exports.removeData = function (collectionName,json,callback) {
         });
     })
 }
+
+//修改
+exports.updateMany = function (collectionName, json1, json2, callback) {
+    _connectDB(function (err, db) {
+        db.collection(collectionName).updateMany(
+            json1,
+            json2,
+            function (err, results) {
+                callback(err, results);
+                db.close();
+            });
+    })
+}

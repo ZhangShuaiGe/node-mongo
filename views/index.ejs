@@ -22,16 +22,14 @@
     </style>
 </head>
 <body>
-    <a href="/personal ">个人中心</a>
+    <% include head.ejs %>
+    <%
+        if(username){%>
+            <img src="<%= img %>" alt="">
+        <%}
+    %>
     <div>
         <h3>留言本</h3>
-        <%
-            if(username){%>
-                <p>欢迎：<%= username %></p>
-            <%}else{%>
-                <a href="/login">登录</a>
-            <%}
-        %>
         姓名：<input type="text" name="name">
         <br />
         留言：<input type="text" name="liuyan">

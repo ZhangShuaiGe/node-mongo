@@ -1,0 +1,15 @@
+<nav class="navbar navbar-default navbar-static-top">
+    <a class="navbar-brand" href="/" style="margin-right: 50px">首页</a>
+    <div class="container">
+        <%
+            if(username){%>
+                <p class="nav navbar-nav navbar-brand">欢迎：<%= username %></p>
+                <a class="navbar-brand" href="/personal">个人中心</a>
+                <a class="navbar-brand" href="/loginout">退出</a>
+            <%}else{%>
+                <a class="navbar-brand" href="/login">登录</a>
+                <a class="navbar-brand" href="/register">注册</a>
+            <%}
+        %>
+    </div>
+</nav>

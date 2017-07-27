@@ -38,6 +38,7 @@
 
 </head>
 <body>
+    <% include head.ejs %>
     <!--参考了http://blog.csdn.net/xiashulin/article/details/70269833-->
     <!--api http://code.ciaoca.com/jquery/jcrop/ -->
     <!--上传控件-->
@@ -132,7 +133,9 @@
                     'img_base64': data
                 },
                 success: function(data) {
-                    alert(data.result);
+                    if(data.result){
+                        alert("修改成功！");
+                    }
                 },
                 error: function(err) {
                     alert("错误");
