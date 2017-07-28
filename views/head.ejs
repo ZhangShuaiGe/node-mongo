@@ -1,15 +1,27 @@
 <nav class="navbar navbar-default navbar-static-top">
-    <a class="navbar-brand" href="/" style="margin-right: 50px">首页</a>
-    <div class="container">
-        <%
-            if(username){%>
-                <p class="nav navbar-nav navbar-brand">欢迎：<%= username %></p>
-                <a class="navbar-brand" href="/personal">个人中心</a>
-                <a class="navbar-brand" href="/loginout">退出</a>
-            <%}else{%>
-                <a class="navbar-brand" href="/login">登录</a>
-                <a class="navbar-brand" href="/register">注册</a>
-            <%}
-        %>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <a class="navbar-brand" href="/" style="margin-right: 20px">首页</a>
+                <a class="navbar-brand" href="/" style="margin-right: 20px">全部</a>
+                <a class="navbar-brand" href="/" style="margin-right: 20px">协会成员</a>
+                <a class="navbar-brand" href="/" style="margin-right: 20px">实时聊天室</a>
+                <a class="navbar-brand" href="/" style="margin-right: 20px">我的吐槽</a>
+            </div>
+            <div class="col-md-4">
+                    <%
+                    if(username){%>
+                    <p class="nav navbar-nav navbar-brand">欢迎：<%= username %></p>
+                    <a class="navbar-brand" href="/personal">个人中心</a>
+                    <a class="navbar-brand" href="/loginout">退出</a>
+                    <%}else{%>
+                    <a class="navbar-brand" href="/login">登录</a>
+                    <a class="navbar-brand" href="/register">注册</a>
+                    <%}
+                    %>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
     </div>
 </nav>

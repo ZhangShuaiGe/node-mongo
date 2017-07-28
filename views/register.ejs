@@ -8,10 +8,6 @@
     <script type="text/javascript" src="js/underscore-noflect.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css">
     <style>
-        body{
-            width:1200px;
-            margin: 0 auto;
-        }
         h1 {
             margin-bottom:30px;
             font-size:30px;
@@ -23,46 +19,56 @@
     </style>
 </head>
 <body>
-<form>
-    <h1>用户注册<a href="/login">已有账号？<span>登录</span></a></h1>
-    <div class="form-group">
-        <label for="exampleInputEmail1">用户名</label>
-        <input type="text" class="form-control" id="name" placeholder="name">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">密码</label>
-        <input type="password" class="form-control" id="pwd" placeholder="Password">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">确认密码</label>
-        <input type="password" class="form-control" id="pwdtrue" placeholder="Password">
-    </div>
-    <button type="submit" id="submit" class="btn btn-default">Submit</button>
-    <script>
-        $("#submit").on("click",function () {
-            var name = $("#name").val();
-            var pwd = $("#pwd").val();
-            var pwdtrue = $("#pwdtrue").val();
-            if(pwd != pwdtrue){
-                alert("两次密码不一致")
-            }else{
-                $.ajax({
-                    url:"/register",
-                    type:"POST",
-                    data:{"name":name,"pwd":pwd,"ajax":1},
-                    success:function (data) {
-                        if(data.result){
-                            window.location.href = "/login";
+<% include head.ejs %>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form>
+                <h1>用户注册<a href="/login">已有账号？<span>登录</span></a></h1>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">用户名</label>
+                    <input type="text" class="form-control" id="name" placeholder="name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">密码</label>
+                    <input type="password" class="form-control" id="pwd" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">确认密码</label>
+                    <input type="password" class="form-control" id="pwdtrue" placeholder="Password">
+                </div>
+                <button type="submit" id="submit" class="btn btn-default">Submit</button>
+                <script>
+                    $("#submit").on("click",function () {
+                        var name = $("#name").val();
+                        var pwd = $("#pwd").val();
+                        var pwdtrue = $("#pwdtrue").val();
+                        if(pwd != pwdtrue){
+                            alert("两次密码不一致")
+                        }else{
+                            $.ajax({
+                                url:"/register",
+                                type:"POST",
+                                data:{"name":name,"pwd":pwd,"ajax":1},
+                                success:function (data) {
+                                    if(data.result){
+                                        window.location.href = "/login";
+                                    }
+                                },
+                                error:function () {
+                                    alert("注册失败,请重新提交");
+                                }
+                            })
                         }
-                    },
-                    error:function () {
-                        alert("注册失败,请重新提交");
-                    }
-                })
-            }
-            return false;
-        })
-    </script>
-</form>
+                        return false;
+                    })
+                </script>
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+<% include footer.ejs %>
 </body>
 </html>

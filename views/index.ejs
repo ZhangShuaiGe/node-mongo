@@ -11,64 +11,172 @@
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/underscore-noflect.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css">
+    <!--self-->
+    <script src="commonjs/login.js"></script>
     <style>
-        body{
-            max-width: 1200px;
-            margin: 0 auto;
+        .container-fluid{
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
         }
-        input{
-            margin-bottom:20px;
+        .login .te{
+            margin-bottom: 30px;
+        }
+        .login .alert{
+            display: none;
+        }
+        .welcome{
+            font-size: 30px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        #textarea{
+            width: 400px;
+            height: 160px;
+            font-size: 14px;
+        }
+        li{
+            list-style: none;
+        }
+        #ul{
+            padding: 0;
+        }
+        #ul li{
+            background: #f7f7f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e1e8;
         }
     </style>
 </head>
 <body>
     <% include head.ejs %>
-    <%
-        if(username){%>
-            <img src="<%= img %>" alt="">
-        <%}
-    %>
-    <div>
-        <h3>留言本</h3>
-        姓名：<input type="text" name="name">
-        <br />
-        留言：<input type="text" name="liuyan">
-        <br />
-        <a id="submit" href="javascript:;">提交</a>
+    <!--容器-->
+    <div class="container-fluid" style="margin-top: 50px">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <div class="jumbotron">
+                    <% if(username) {%>
+                        <div>
+                            <span class="welcome">欢迎：<%= username%></span>
+                            <br/>
+                            <img src="<%= img %>" alt="" width="100" height="100">
+                        </div>
+                    <%}else{%>
+                        <h1>welcome!</h1>
+                        <p style="margin-top: 15px"><a class="btn btn-primary btn-lg" href="/register" role="button">注册</a></p>
+                    <%}%>
+                </div>
+            </div>
+            <!--right 登录-->
+            <% if(username){%>
+                <div class="col-md-4">
+                    <h3><%= username%>吐槽：</h3>
+                    <textarea id="textarea" placeholder="快来吐槽吧！"></textarea>
+                    <br/>
+                    <button type="button" class="btn btn-primary">吐槽</button>
+                </div>
+            <%}else{%>
+                <div class="col-md-4">
+                <div class="login">
+                    <h3>用户登录</h3>
+                    <div class="input-group input-group-lg te">
+                        <span class="input-group-addon" id="sizing-addon1">用户名</span>
+                        <input id="name" name="username" type="text" class="form-control" placeholder="用户名" aria-describedby="sizing-addon1">
+                    </div>
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon" id="sizing-addon1">密码</span>
+                        <input id="pwd" type="password" name="pwd" class="form-control" placeholder="密码" aria-describedby="sizing-addon1">
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="record" name="check" value="1"> Check me out
+                        </label>
+                    </div>
+                    <div>
+                        <button type="button" class="submit btn btn-primary">提交</button>
+                    </div>
+                    <div class="alert alert-danger" role="alert">错误</div>
+                </div>
+            </div>
+            <%}%>
+            <div class="col-md-2"></div>
+        </div>
     </div>
-    <div>
-        <%
-            if(count == 0)
-            {%>
-                暂时没有留言哦,请留言
-            <%}
-            else
-            {%>
-                留言一共<%= count %>页
-            <%}
-        %>
+    <!--容器2-->
+    <% if(username){%>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                hahahahahahahahaah
+                <script>
+                    $.ajax({
+                        url:"",
+                        type:"get",
+                        success:function(data){
+                            console.log(data);
+                        },
+                        error:function(){
+                            alert("错误");
+                        }
+                    })
+                </script>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    <%}else{%>
+         <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h3 style="margin-bottom: 20px">游客留言</h3>
+                <div class="input-group input-group-lg" style="margin-bottom: 20px">
+                    <span class="input-group-addon" id="sizing-addon1">姓名：</span>
+                    <input style="width: 300px" type="text" name="name" class="form-control" placeholder="Username" aria-describedby="sizing-addon1">
+                </div>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-addon" id="sizing-addon1">留言：</span>
+                    <input style="width: 300px" name="liuyan" type="text" name="name" class="form-control" placeholder="text" aria-describedby="sizing-addon1">
+                </div>
+                <br />
+                <button type="button" id="submit" class="btn btn-primary" style="margin-bottom: 20px">留言</button>
+                <ul id="ul">
+
+                </ul>
+                <div>
+                    <nav aria-label="...">
+                        <ul class="pagination">
+                            <%
+                            for(var i = 1 ; i <= count ; i ++)
+                            {%>
+                            <li><a href="javascript:;"><%= i%></a></li>
+                            <%}
+                            %>
+                            <li>
+                                <%
+                                if(count == 0)
+                                {%>
+                                暂时没有留言哦,请留言
+                                <%}
+                                else
+                                {%>
+                                <span>一共<%= count %>页</span>
+                                <%}
+                                %>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
     </div>
-    <nav aria-label="...">
-        <ul class="pagination">
-            <%
-                for(var i = 1 ; i <= count ; i ++)
-                {%>
-                <li><a href="javascript:;"><%= i%></a></li>
-                <%}
-            %>
-        </ul>
-    </nav>
-    <div>
-        <ul id="ul">
-
-        </ul>
-    </div>
-
-    <!--underscore 前台模板引擎方法-->
-    <scirpt type="text/template" id="tp1">
-
-    </scirpt>
+    <%}%>
     <script>
+//        翻页
         $(".pagination a").on("click",function () {
             $("#ul").html("");
             var page = parseInt($(this).html());
@@ -82,7 +190,7 @@
                     for(var i = 0 ; i < data.result.length; i++){
                         dom += "<li>" +
                             "<p>姓名："+ data.result[i].name +"</p>" +
-                            "<p>留言："+ data.result[i].liuyanb +"</p></li>"+
+                            "<p>留言："+ data.result[i].liuyanb +"</p>"+
                             "<p>time："+ data.result[i].time +"</p>"+
                             "<a href='/shanchu?"+data.result[i]._id+"'>删除</a>"+
                         "</li>"
@@ -93,7 +201,8 @@
                     alert("错误");
                 }
             })
-        })
+        });
+//        游客提交
         $("#submit").on("click",function () {
             var name = $("input[name=name]").val();
             var liuyan = $("input[name=liuyan]").val();
@@ -118,7 +227,7 @@
                 }
             })
         })
-//        常规ajax遍历
+//        读取留言
         $.ajax({
             url:"/du",
             type:"get",
@@ -128,7 +237,7 @@
                 for(var i = 0 ; i < data.result.length; i++){
                     dom += "<li>" +
                                 "<p>姓名："+ data.result[i].name +"</p>" +
-                                "<p>留言："+ data.result[i].liuyanb +"</p></li>"+
+                                "<p>留言："+ data.result[i].liuyanb +"</p>"+
                                 "<p>time："+ data.result[i].time +"</p>"+
                                 "<a href='/shanchu?id="+data.result[i]._id+"'>删除</a>"+
                             "</li>"
@@ -140,5 +249,6 @@
             }
         })
     </script>
+    <% include footer.ejs %>
 </body>
 </html>

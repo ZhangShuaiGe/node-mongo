@@ -11,20 +11,7 @@
     <link rel="stylesheet" href="css/jquery.Jcrop.css">
     <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
     <script src="js/jquery.Jcrop.js"></script>
-
     <style>
-        body{
-            width: 1200px;
-            margin: 0 auto;
-            padding:40px;
-        }
-        #myCanva{
-            /*padding: 6px;*/
-            /*border: 1px rgba(0,0,0,.4) solid;*/
-            /*border-radius: 6px;*/
-            /*background-color: white;*/
-            /*box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);*/
-        }
         #Img1{
             min-width: 200px;
             min-height: 200px;
@@ -34,25 +21,75 @@
             display: none;
             margin-bottom:20px;
         }
+        .userinfo li{
+            margin-bottom: 20px;
+            font-size: 18px;
+            list-style: none;
+        }
+        .userinfo li span{
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        .file{
+            display: inline-block;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .checkbox label{
+            margin-right: 20px;
+        }
     </style>
-
 </head>
 <body>
     <% include head.ejs %>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="userinfo">
+                            <li>
+                                <span>用户名：</span><input type="text">
+                            </li>
+                            <li>
+                                <span>头像：</span><img src="boy.jpg" alt="" width="100" height="100"/>
+                                <label>
+                                    <em href="javascript:;" class="glyphicon glyphicon-open file"></em>
+                                    <input type="file" name="upLoadImg1" id="upLoadImg1" style="display: none">
+                                </label>
+                            </li>
+                            <li class="checkbox">
+                                <span>爱好：</span>
+                                <label><input type="checkbox" name="" value="王者农药">王者农药</label>
+                                <label><input type="checkbox" name="" value="LOL">LOL</label>
+                                <label><input type="checkbox" name="" value="三国杀">三国杀</label>
+                            </li>
+                        </ul>
+                        <button style="margin-left: 180px" type="button" class="btn btn-primary">确定修改</button>
+                    </div>
+                    <div class="col-md-6">
+                        <!--弹窗与裁切图-->
+                        <div class="cover">
+                            <img id="Img1" alt="">
+                            <div style="margin-top: 20px">
+                                <button id="btnSave">保存</button>
+                                <button id="reset">重置选框</button>
+                            </div>
+                        </div>
+                        <!--裁切范围重绘canvas-->
+                        <canvas id="myCanva" width="200" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
     <!--参考了http://blog.csdn.net/xiashulin/article/details/70269833-->
     <!--api http://code.ciaoca.com/jquery/jcrop/ -->
     <!--上传控件-->
-    <input type="file" name="upLoadImg1" id="upLoadImg1">
-
-    <!--弹窗与裁切图-->
-    <div class="cover">
-        <img id="Img1" alt="">
-        <button id="btnSave">保存</button>
-        <button id="reset">重置选框</button>
-    </div>
-
-    <!--裁切范围重绘canvas-->
-    <canvas id="myCanva" width="200" height="200"></canvas>
 
     <script>
 //        获取this,向外暴露api接口
@@ -147,6 +184,6 @@
             jcropApi.setSelect([0, 0, 200, 200]);
         })
     </script>
-
+    <% include footer.ejs %>
 </body>
 </html>

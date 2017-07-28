@@ -7,6 +7,8 @@
     <script src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/underscore-noflect.js"></script>
     <link rel="stylesheet" href="css/bootstrap.css">
+    <!--self-->
+    <script src="commonjs/login.js"></script>
     <style>
         .box{
             max-width:1200px;
@@ -28,6 +30,7 @@
     </style>
 </head>
 <body>
+<% include head.ejs %>
     <div class="box">
         <h3>用户登录 <a href="/register">没有账号？<span>注册</span></a></h3>
         <div class="input-group input-group-lg te">
@@ -48,38 +51,6 @@
         </div>
         <div class="alert alert-danger" role="alert">错误</div>
     </div>
-    <script>
-        $(function () {
-            $(".submit").on("click",function () {
-                $(".alert").hide();
-                var name = $("input[name = username]").val();
-                var pwd = $("input[name = pwd]").val();
-                var check = $("input[name = check]:checked").val();
-                if(name == ""){
-                    $(".alert").show().html("请输入用户名");
-                    return;
-                }
-                if(pwd == ""){
-                    $(".alert").show().html("请输入密码");
-                    return;
-                }
-                $.ajax({
-                    url:"/login",
-                    type:"get",
-                    data:{"ajax":true,"username":name,"password":pwd,"check":check},
-                    success:function (data) {
-                        if(data.result == 0){
-                            $(".alert").show().html(data.text);
-                        }else{
-                            window.location.href = "/";
-                        }
-                    },
-                    error:function () {
-                        alert("错误");
-                    }
-                })
-            })
-        })
-    </script>
+<% include footer.ejs %>
 </body>
 </html>
