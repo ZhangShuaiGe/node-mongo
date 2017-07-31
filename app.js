@@ -32,7 +32,8 @@ app.get("/shanchu",Router.doRemove);// 删除留言
 app.get("/personal",Router.showPersonal);//显示个人中心
 app.post("/userinfo",Router.doAvatar);// 头像上传
 app.get("/loginout",Router.doLoginout);// 退出
-app.get("./message",Router.dologinMessage);// 注册用户的留言接收
+app.get("/message",Router.dologinMessage);// 注册用户的留言接收
+app.get("/allmessage",Router.showloginMessage);// 注册用户的留言展示
 // 注意：404在最下面
 app.get("/*",Router.showError);// 404
 app.listen(3000);

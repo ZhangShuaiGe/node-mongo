@@ -172,9 +172,25 @@ exports.showError = function (req,res) {
     res.render("404");
 };
 
+// 注册用户的留言接收
 exports.dologinMessage = function (req,res) {
     var username = req.session.username;
-    db.find("user",{"name":username},function (err,rusult) {
-
+    var message = req.param("text");
+    console.log(message);
+    db.updateMany("user",{"name":username},{$set:{"message":message}},function (err,results) {
+        if(err){
+            res.json({"result":0});
+            return;
+        }
+        res.json({"rusult":1});
     })
+}
+
+// 注册用户的留言显示
+exports.showloginMessage = function (req,res) {
+    // 显示message 字段存在的用户，message代表留过言
+    db.find("user",{"message":{ $exists: true}},function (result) {
+        // console.log(result);
+        res.send({"result":result});
+    });
 }

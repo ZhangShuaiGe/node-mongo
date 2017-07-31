@@ -49,6 +49,19 @@
             margin-bottom: 20px;
             border: 1px solid #e1e1e8;
         }
+        .head_img{
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        #login_liuyan{
+            overflow: hidden;
+        }
+        #login_liuyan li{
+            float: left;
+            margin-right:50px;
+            margin-bottom:20px;
+        }
     </style>
 </head>
 <body>
@@ -77,7 +90,7 @@
                     <h3><%= username%>吐槽：</h3>
                     <textarea id="textarea" placeholder="快来吐槽吧！"></textarea>
                     <br/>
-                    <button type="button" class="btn btn-primary">吐槽</button>
+                    <button type="button" id="login_message" class="btn btn-primary">吐槽</button>
                 </div>
             <%}else{%>
                 <div class="col-md-4">
@@ -106,29 +119,47 @@
             <div class="col-md-2"></div>
         </div>
     </div>
-    <!--容器2-->
+    <!--容器2 如果登录显示登录用户的留言 else 显示游客留言-->
     <% if(username){%>
+    <div class="container-fluid">
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8">
-                hahahahahahahahaah
-                <script>
-                    $.ajax({
-                        url:"",
-                        type:"get",
-                        success:function(data){
-                            console.log(data);
-                        },
-                        error:function(){
-                            alert("错误");
-                        }
-                    })
-                </script>
+                <ul id="login_liuyan">
+
+                </ul>
             </div>
             <div class="col-md-2"></div>
         </div>
+        <script>
+            $.ajax({
+                url:"/allmessage",
+                type:"get",
+                success:function (data) {
+                    var len = data.result.length;
+                    if(len == 0){
+                        $("#login_liuyan").append("<li>吐槽大会倒闭了,没人留言。要不你来说两句？</li>");
+                        return ;
+                    }
+                    for(var i = 0 ; i < len ; i++){
+                        var dom = [' <li>',
+                            '                        <p>',
+                            '                            <img class="head_img" src='+data.result[i].avatar+' alt="">',
+                            '                            <span style="font-size: 24px">'+data.result[i].name+'说:</span>',
+                            '                        </p>',
+                            '                        <p>'+data.result[i].message+'</p>',
+                            '</li>'].join("");
+                        $("#login_liuyan").append(dom);
+                    }
+                },
+                error:function () {
+                    alert("错误");
+                }
+            })
+        </script>
+    </div>
     <%}else{%>
-         <div class="container-fluid">
+     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8">
@@ -247,6 +278,21 @@
             error:function () {
                 alert("请求失败");
             }
+        })
+//        登陆后的发言
+        $("#login_message").on("click",function () {
+            var text = $("#textarea").val();
+            $.ajax({
+                url:"/message",
+                data:{"text":text},
+                type:"get",
+                success:function (data) {
+                    window.location.href = "/";
+                },
+                error:function () {
+                    alert("错误");
+                }
+            })
         })
     </script>
     <% include footer.ejs %>
