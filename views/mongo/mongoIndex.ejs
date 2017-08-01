@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mongoIndex</title>
+    <style>
+        label{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <%
+        if(test == 1){%>
+            <form action="/mongooseFile">
+                <lable>
+                    书名：
+                    <input type="text" name="bookname" value="<%= result.name%>">
+                </lable>
+                <label>
+                    作者：
+                    <input type="text" name="author" value="<%= result.author%>">
+                </label>
+                <label>
+                    价格：
+                    <input type="text" name="price" value="<%= result.price%>">
+                </label>
+                <button>修改</button>
+            </form>
+        <%}else{%>
+            <h3>加入mongoose处理mongodb</h3>
+            <div>
+                <form action="/mongooseFile">
+                    <lable>
+                        书名：
+                        <input type="text" name="bookname">
+                    </lable>
+                    <label>
+                        作者：
+                        <input type="text" name="author">
+                    </label>
+                    <label>
+                        价格：
+                        <input type="text" name="price">
+                    </label>
+                    <button>提交</button>
+                </form>
+                <a href="/" style="margin-right: 20px">首页</a>
+                <a href="/mongooseShow">查看图书列表</a>
+            </div>
+        <%}
+    %>
+</body>
+</html>

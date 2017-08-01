@@ -7,6 +7,9 @@ var ObjectID = require('mongodb').ObjectID;
 
 var fs = require("fs");
 
+var mongoose = require("../model/mongoose.js");
+
+
 // 首页
 exports.doIndex = function(req,res,next){
     console.log("session",req.session.username);
@@ -194,3 +197,49 @@ exports.showloginMessage = function (req,res) {
         res.send({"result":result});
     });
 }
+
+// mongoose 首页
+exports.mongoIndex = function (req,res) {
+    res.render("mongo/mongoIndex",{
+        "test":0,
+    });
+}
+// mongoose 接收图书
+exports.mongoFile = function (req,res) {
+    var name = req.param("bookname");
+    var author = req.param("author");
+    var price = req.param("price");
+    mongoose.create({"name":name,"author":author,"price":price},function (err) {
+        if(err){
+            console.log("添加错误");
+        }else{
+            res.send("添加成功 <a href='/mongooseShow'>查看添加</a> ");
+        }
+    });
+}
+
+// mongoose 显示所有图书信息
+exports.mongoShow = function (req,res) {
+    mongoose.find({},function (err,result) {
+        console.log(result);
+        res.render("mongo/mongoShow",{
+            "list":result
+        })
+    });
+}
+
+// mongoose 修改图书信息
+exports.mongoReset = function (req,res) {
+    var id = req.param("_id");
+    mongoose.find({"_id":id},function (err,result) {
+        res.render("mongo/mongoIndex",{
+            "test":1,
+            "result":result,
+        })
+    })
+}
+
+// mongoose 删除图书
+// exports.mongoReset = function (req,res) {
+//
+// }

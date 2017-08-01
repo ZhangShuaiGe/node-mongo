@@ -5,7 +5,6 @@ var cookieParser= require("cookie-parser");
 var session = require("express-session");
 var app = express();
 var Router = require("./router/router");
-
 app.use(bodyParser.urlencoded({ extended: false }));
 // 使用cookie 要用中间件
 app.use(cookieParser());
@@ -34,6 +33,13 @@ app.post("/userinfo",Router.doAvatar);// 头像上传
 app.get("/loginout",Router.doLoginout);// 退出
 app.get("/message",Router.dologinMessage);// 注册用户的留言接收
 app.get("/allmessage",Router.showloginMessage);// 注册用户的留言展示
+
+// mongoose 使用
+app.get("/mongooseIndex",Router.mongoIndex);
+app.get("/mongooseFile",Router.mongoFile);
+app.get("/mongooseShow",Router.mongoShow);
+app.get("/mongoreset",Router.mongoReset);
+// app.get("/mongoremove",Router.mongoRemove);
 // 注意：404在最下面
 app.get("/*",Router.showError);// 404
 app.listen(3000);
