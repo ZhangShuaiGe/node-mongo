@@ -11,7 +11,7 @@ db.on("open",function () {
 var BookSchema = new mongoose.Schema({
     name : String,  //定义一个属性name，类型为String
     author: String,
-    price : Number,
+    price : String,
     time  : {type : Date, default: Date.now}
 });
 

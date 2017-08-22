@@ -12,7 +12,8 @@
 <body>
     <%
         if(test == 1){%>
-            <form action="/mongooseFile">
+            <h3>修改书籍信息</h3>
+            <form action="/domongoReset">
                 <lable>
                     书名：
                     <input type="text" name="bookname" value="<%= result.name%>">
@@ -22,9 +23,10 @@
                     <input type="text" name="author" value="<%= result.author%>">
                 </label>
                 <label>
-                    价格：
+                    地址：
                     <input type="text" name="price" value="<%= result.price%>">
                 </label>
+                <input type="hidden" name="id" value="<%= result.id %>">
                 <button>修改</button>
             </form>
         <%}else{%>
@@ -36,11 +38,11 @@
                         <input type="text" name="bookname">
                     </lable>
                     <label>
-                        作者：
+                        推荐人：
                         <input type="text" name="author">
                     </label>
                     <label>
-                        价格：
+                        地址：
                         <input type="text" name="price">
                     </label>
                     <button>提交</button>

@@ -12,6 +12,7 @@ var mongoose = require("../model/mongoose.js");
 
 // 首页
 exports.doIndex = function(req,res,next){
+    console.log("query",req.query);
     console.log("session",req.session.username);
     // console.log('取得的cookie:',req.cookies.user);
     // var getcookie = req.cookies.user;
@@ -204,6 +205,7 @@ exports.mongoIndex = function (req,res) {
         "test":0,
     });
 }
+
 // mongoose 接收图书
 exports.mongoFile = function (req,res) {
     var name = req.param("bookname");
@@ -221,25 +223,54 @@ exports.mongoFile = function (req,res) {
 // mongoose 显示所有图书信息
 exports.mongoShow = function (req,res) {
     mongoose.find({},function (err,result) {
-        console.log(result);
+        // console.log(result);
         res.render("mongo/mongoShow",{
             "list":result
         })
     });
 }
 
-// mongoose 修改图书信息
+// mongoose 显示要修改图书信息
 exports.mongoReset = function (req,res) {
     var id = req.param("_id");
-    mongoose.find({"_id":id},function (err,result) {
+    mongoose.find({"_id":ObjectID(id)},function (err,result) {
         res.render("mongo/mongoIndex",{
             "test":1,
-            "result":result,
+            "result":result[0],
         })
     })
 }
 
+// 执行修改图书信息
+exports.domongoReset = function (req,res) {
+    var data = req.query;
+    // 条件
+    var conditions = {"_id" : ObjectID(req.query.id)};
+    // 更新
+    var update = {$set : data};
+    var options = {upsert : true};
+    mongoose.update(conditions,update,options,function (err) {
+        if(err){
+            console.log("失败");
+        }else{
+            res.send("修改成功 <a href='/mongooseShow'>返回</a>");
+        }
+    });
+}
+
 // mongoose 删除图书
-// exports.mongoReset = function (req,res) {
-//
-// }
+exports.mongoRemove = function (req,res) {
+    var _id = req.param("_id");
+    mongoose.remove({"_id":_id},function (error) {
+        if(error){
+            console.log("错误");
+        }else{
+            res.send("删除成功 <a href='/mongooseShow'>返回</a>")
+        }
+    });
+}
+
+//聊天室
+exports.doliaotian = function (req,res) {
+    res.render("chat");
+}
