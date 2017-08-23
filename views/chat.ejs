@@ -3,22 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>聊天室</title>
-</head>
-<body>
-    <h1>我是index页面，我引用了秘密script文件</h1>
-    <input type="button" value="发送消息给全班" id="btn"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.css">
 
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    <style>
+        .box{
+            width: 1000px;
+            margin: 0 auto;
+        }
+        #text{
+            border:1px solid #ccc;
+            height: 600px;
+            width: 500px;
+            margin: 0 auto;
+            overflow-y: auto;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 2px #ccc;
+            padding: 20px;
+        }
+        #btn{
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<% include head.ejs %>
+    <div class="box">
+        <div id="text">
+
+        </div>
+        <textarea class="form-control" rows="3" id="con"></textarea>
+        <input class="btn btn-default" type="button" value="发送" id="btn">
+        <input type="hidden" value="<%= username %>" name="username">
+    </div>
+
     <script type="text/javascript">
         var socket = io();
         //点击按钮之后，发出提问
-        document.getElementById("btn").onclick = function(){
-            socket.emit("tiwen","吃了么？");
-        }
+        $("#btn").on("click",function () {
+            var msg = $("#con").val();
+            var name = $("input[name='username']").val();
+//            向服务发送
+            socket.emit("tiwen",[name,msg]);
+        })
 
-        socket.on("huida",function(msg){
-            console.log("服务器说：" + msg);
+        socket.on("huida",function(result){
+            $("#text").append("<p>"+ result[0] + '说：' + result[1] +"</p>");
+//            滚动到底部
+            $("#text").scrollTop($("#text")[0].scrollHeight);
         });
     </script>
+    <% include footer.ejs %>
 </body>
 </html>

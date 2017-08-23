@@ -38,6 +38,8 @@ exports.doIndex = function(req,res,next){
 
 // 登录
 exports.doLogin = function (req,res,next) {
+    // location 记录从哪里过来的
+    var location = req.session.location;
     var getcookie = req.cookies.user;
     console.log("cookie",getcookie);
     // 判断是否ajax请求
@@ -65,7 +67,14 @@ exports.doLogin = function (req,res,next) {
                     // console.log(time);
                     res.cookie("user",{"name":username,"pwd":cookie_pwd},{ maxAge: time, httpOnly: true });
                 }
-                res.json({"result":"1","text":"/"});
+                // 如果从聊天室 或别的需要登录的地方 过来的，登录后跳去 对应的地方
+                if(location){
+                    res.json({"result":"1","location":location});
+                }else{
+                    // 默认首页
+                    res.json({"result":"1","location":'/'});
+                }
+
 
             }
 
@@ -188,7 +197,7 @@ exports.dologinMessage = function (req,res) {
         }
         res.json({"rusult":1});
     })
-}
+};
 
 // 注册用户的留言显示
 exports.showloginMessage = function (req,res) {
@@ -197,14 +206,14 @@ exports.showloginMessage = function (req,res) {
         // console.log(result);
         res.send({"result":result});
     });
-}
+};
 
 // mongoose 首页
 exports.mongoIndex = function (req,res) {
     res.render("mongo/mongoIndex",{
         "test":0,
     });
-}
+};
 
 // mongoose 接收图书
 exports.mongoFile = function (req,res) {
@@ -218,7 +227,7 @@ exports.mongoFile = function (req,res) {
             res.send("添加成功 <a href='/mongooseShow'>查看添加</a> ");
         }
     });
-}
+};
 
 // mongoose 显示所有图书信息
 exports.mongoShow = function (req,res) {
@@ -228,7 +237,7 @@ exports.mongoShow = function (req,res) {
             "list":result
         })
     });
-}
+};
 
 // mongoose 显示要修改图书信息
 exports.mongoReset = function (req,res) {
@@ -239,7 +248,7 @@ exports.mongoReset = function (req,res) {
             "result":result[0],
         })
     })
-}
+};
 
 // 执行修改图书信息
 exports.domongoReset = function (req,res) {
@@ -256,7 +265,7 @@ exports.domongoReset = function (req,res) {
             res.send("修改成功 <a href='/mongooseShow'>返回</a>");
         }
     });
-}
+};
 
 // mongoose 删除图书
 exports.mongoRemove = function (req,res) {
@@ -268,9 +277,18 @@ exports.mongoRemove = function (req,res) {
             res.send("删除成功 <a href='/mongooseShow'>返回</a>")
         }
     });
-}
+};
 
 //聊天室
 exports.doliaotian = function (req,res) {
-    res.render("chat");
-}
+    var username = req.session.username;
+    // 如果登录
+    if(username){
+        res.render("chat",{
+            "username": username
+        });
+    }else{
+        req.session.location = "liaotian";
+        res.redirect("/login");
+    }
+};

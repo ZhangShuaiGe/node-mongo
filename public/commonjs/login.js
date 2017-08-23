@@ -23,7 +23,7 @@ $(function () {
                 if(data.result == 0){
                     $(".alert").show().html(data.text);
                 }else{
-                    window.location.href = "/";
+                    window.location.href = data.location;
                 }
             },
             error:function () {
